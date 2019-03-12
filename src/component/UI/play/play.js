@@ -18,7 +18,7 @@ class play extends Component{
         this.setState={key:1}
     }
 
-    componentDidMount(){
+    componentDidUpdate(){
         var node = ReactDOM.findDOMNode(this);
         var elem=node.getElementsByClassName("anim");
         var pos=0;
