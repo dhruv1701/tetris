@@ -1,0 +1,13 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.play{
+    width: 450px;
+    height: 550px;
+}
+.anim{
+    width:200px;
+    position: relative;
+    top: 0;
+}
