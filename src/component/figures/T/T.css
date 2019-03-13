@@ -1,4 +1,6 @@
-
+.t{
+    display: inline-block;
+}
 
 .squaret{
     width: 20px;

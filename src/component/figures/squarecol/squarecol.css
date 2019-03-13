@@ -1,0 +1,27 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.k{
+    position: fixed;
+    height: 20px;
+    width: 20px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 2px solid black;
+}
+.squaress{
+    background-color: rgba(20, 248, 39, 0.911);
+}
+.liness{
+    background-color: crimson;
+}
+.Tss{
+    background-color: darkmagenta;
+}
+.Zss{
+    background-color: rgba(20, 184, 248, 0.911);
+}
+.Lss{
+    background-color: grey;
+}

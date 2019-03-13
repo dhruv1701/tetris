@@ -1,4 +1,6 @@
-
+.s{
+    display: inline-block;
+}
 
 .squares{
     width: 20px;

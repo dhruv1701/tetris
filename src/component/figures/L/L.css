@@ -1,4 +1,6 @@
-
+.L{
+    display: inline-block;
+}
 .squarel{
     width: 20px;
     height: 20px;

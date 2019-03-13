@@ -1,4 +1,6 @@
-
+.z{
+    display: inline-block;
+}
 .squarez{
     width: 20px;
     height: 20px;
