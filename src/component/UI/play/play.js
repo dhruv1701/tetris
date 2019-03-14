@@ -339,6 +339,7 @@ import Z from '../../figures/Z/Z';
 import './play.css';
 import Colour from './colour/colour';
 import Bottom from './../bottombar/bottom/bottom'
+import Sidebar from '../sidebar/sidebar';
 
 const NUMBERING={
     0: 'squaress',
@@ -350,14 +351,18 @@ const NUMBERING={
 
 var x,deg=0;
 class play extends Component{
+    
     state={
         matrix:[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
+        score:0,
+        linesCleared:0
     }
+
     componentDidMount(){
         var node=ReactDOM.findDOMNode(this);
         var elem=node.getElementsByClassName("anim");
         var pos=0;
-        var flag=0;
+        var flag=0,flag1=0;
         var that=this;
         var set=setInterval(function(){
             var tempMat=that.state.matrix;
@@ -377,8 +382,19 @@ class play extends Component{
             if(tempMat[(currentPosition[3].top+20)/20][(currentPosition[3].left)/20]!==undefined)
             flag=1;
 
+            if(currentPosition[0].top==520)
+            flag1=1;
 
-            if(pos===500 || flag===1)
+            if(currentPosition[1].top==520)
+            flag1=1;
+
+            if(currentPosition[2].top==520)
+            flag1=1;
+
+            if(currentPosition[3].top==520)
+            flag1=1;
+
+            if(pos===520 || flag===1 || flag1===1)
             {
                 pos=0;
                 //console.log(currentPosition);
@@ -388,7 +404,31 @@ class play extends Component{
                 tempMat[(currentPosition[3].top)/20][(currentPosition[3].left)/20]=NUMBERING[x];
                 console.log(tempMat);
                 clearInterval(set);
-                that.setState({matrix: tempMat});
+                var scores=that.state.score;
+                var linesClear=that.state.linesCleared;
+                var cnt=0;
+                for(var i=0;i<=26;i++)
+                {
+                    cnt=0;
+                    for(var j=0;j<tempMat[i].length;j++)
+                    {
+                        if(tempMat[i][j]!==undefined)
+                        {
+                            cnt++;
+                        }
+                    }
+                    console.log(cnt);
+                    if(cnt==23)
+                    {
+                        tempMat.splice(i,1);
+                        tempMat.unshift([]);
+                        linesClear++;
+                        scores+=10;
+                    }
+                }
+                var random=Math.floor(Math.random()*20)*20;
+                elem[0].style.left=random+"px";
+                that.setState({matrix: tempMat,score:scores,linesCleared:linesClear});
                 that.componentDidMount();
             }
 
@@ -513,7 +553,7 @@ class play extends Component{
                     left: botleft+40
                 }
             }
-            if(degree===90)
+            if(degree===90 || degree===-270)
             {
                 a={
                     top: bottop+20,
@@ -532,7 +572,7 @@ class play extends Component{
                     left: botleft+20
                 }
             }
-            if(degree===-90)
+            if(degree===-90 || degree===270)
             {
                 a={
                     top: bottop,
@@ -593,7 +633,7 @@ class play extends Component{
                     left: botleft+20
                 }
             }
-            if(degree===90)
+            if(degree===90 || degree===-270)
             {
                 a={
                     top: bottop,
@@ -612,7 +652,7 @@ class play extends Component{
                     left: botleft
                 }
             }
-            if(degree===-90)
+            if(degree===-90 || degree===270)
             {
                 a={
                     top: bottop+20,
@@ -673,7 +713,7 @@ class play extends Component{
                     left: botleft
                 }
             }
-            if(degree===90 || degree===-90)
+            if(degree===90 || degree===-90 || degree===270 || degree===-270)
             {
                 a={
                     top: bottop,
@@ -718,8 +758,8 @@ class play extends Component{
     }
 
     randomization=()=>{
-        x=Math.floor(Math.random()*5);
-        var y;
+        x=Math.floor(Math.random()*5); 
+       var y;
         if(x===0)
             y=<Square/>
         if(x===1)
@@ -814,16 +854,26 @@ class play extends Component{
         }
     }
 
+    rotateClock=()=>{
+        var node=ReactDOM.findDOMNode(this);
+        var elem=node.getElementsByClassName("anim");
+        var rotation=deg+90;
+        elem[0].style.transformOrigin="50% 50%";
+        elem[0].style.transform='rotate('+rotation+'deg)';
+        deg=(deg+90+360)%360;
+
+    }
     render(){
 
         var randomElement=this.randomization();
         return(
             <div className="play">
-                <div className="anim" >
+                <div className="anim" style={{left:"0px",top:"20px"}}>
                     {randomElement}     
                 </div>
                 <Colour matrix={this.state.matrix} /> 
-                <Bottom moveleft={this.moveLeft} moveright={this.moveRight}/>
+                <Sidebar linescleared={this.state.linesCleared} score={this.state.score}/>
+                <Bottom moveleft={this.moveLeft} moveright={this.moveRight} rotateclock={this.rotateClock}/>
             </div>
         )
     }

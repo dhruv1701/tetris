@@ -3,13 +3,13 @@
     padding: 0;
 }
 .play{
-    width: 460px;
+    width: 660px;
     height: 620px;
     position: relative;
     left:260px;
 }
 
 .anim{
-    width:200px;
     position: absolute;
+    z-index: 300;
 }
