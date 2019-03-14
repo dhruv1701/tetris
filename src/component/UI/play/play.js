@@ -338,6 +338,7 @@ import T from '../../figures/T/T';
 import Z from '../../figures/Z/Z';
 import './play.css';
 import Colour from './colour/colour';
+import Bottom from './../bottombar/bottom/bottom'
 
 const NUMBERING={
     0: 'squaress',
@@ -350,7 +351,7 @@ const NUMBERING={
 var x,deg=0;
 class play extends Component{
     state={
-        matrix:[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
+        matrix:[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
     }
     componentDidMount(){
         var node=ReactDOM.findDOMNode(this);
@@ -731,6 +732,88 @@ class play extends Component{
             y=<Z/>
         return y;
     }
+
+
+    moveLeft=()=>{
+        var node=ReactDOM.findDOMNode(this);
+        var elem=node.getElementsByClassName("anim");
+        var left=elem[0].style.left;
+        var top=elem[0].style.top;
+        var tempPos=this.marker(x,deg,top,left);
+        var flag=0,flag1=0;
+        for(var i=0;i<=3;i++)
+        {
+            if(tempPos[i].left<20)
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=1)
+        {
+            var newnumber=this.parseStr(left);
+            var tempMat=this.state.matrix;
+            
+            if(tempMat[(tempPos[0].top+20)/20][(tempPos[0].left-20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[1].top+20)/20][(tempPos[1].left-20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[2].top+20)/20][(tempPos[2].left-20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[3].top+20)/20][(tempPos[3].left-20)/20]!==undefined)
+            flag1=1;
+            
+            if(flag1==0)
+            {
+                newnumber-=20;
+                elem[0].style.left=newnumber+"px";
+            }
+        }
+    }
+
+    moveRight=()=>{
+        var node=ReactDOM.findDOMNode(this);
+        var elem=node.getElementsByClassName("anim");
+        var left=elem[0].style.left;
+        var top=elem[0].style.top;
+        var tempPos=this.marker(x,deg,top,left);
+        var flag=0,flag1=0;
+        for(var i=0;i<=3;i++)
+        {
+            if(tempPos[i].left>=440)
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=1)
+        {
+            var newnumber=this.parseStr(left);
+            var tempMat=this.state.matrix;
+            
+            if(tempMat[(tempPos[0].top+20)/20][(tempPos[0].left+20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[1].top+20)/20][(tempPos[1].left+20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[2].top+20)/20][(tempPos[2].left+20)/20]!==undefined)
+            flag1=1;
+
+            if(tempMat[(tempPos[3].top+20)/20][(tempPos[3].left+20)/20]!==undefined)
+            flag1=1;
+            
+            if(flag1==0)
+            {
+                newnumber+=20;
+                elem[0].style.left=newnumber+"px";
+            }
+        }
+    }
+
     render(){
 
         var randomElement=this.randomization();
@@ -739,7 +822,8 @@ class play extends Component{
                 <div className="anim" >
                     {randomElement}     
                 </div>
-                <Colour matrix={this.state.matrix} style={{position:"fixed"}}/> 
+                <Colour matrix={this.state.matrix} /> 
+                <Bottom moveleft={this.moveLeft} moveright={this.moveRight}/>
             </div>
         )
     }
