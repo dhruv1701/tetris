@@ -349,93 +349,162 @@ const NUMBERING={
     4: 'Zss'
 }
 
-var x,deg=0;
+var x,deg=0,pause=0,sidebar,set,gameover=null,randomElement,posit=0,start=0,pos;
 class play extends Component{
     
     state={
         matrix:[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
         score:0,
-        linesCleared:0
+        linesCleared:0,
+        newFigure:1
     }
 
     componentDidMount(){
         var node=ReactDOM.findDOMNode(this);
         var elem=node.getElementsByClassName("anim");
-        var pos=0;
+        pos=0;
+        start=1;
         var flag=0,flag1=0;
         var that=this;
-        var set=setInterval(function(){
-            var tempMat=that.state.matrix;
-            var left=elem[0].style.left;
-            var top=elem[0].style.top;
-            var currentPosition=that.marker(x,deg,top,left);
-            console.log(currentPosition);
-            if(tempMat[(currentPosition[0].top+20)/20][(currentPosition[0].left)/20]!==undefined)
-            flag=1;
-
-            if(tempMat[(currentPosition[1].top+20)/20][(currentPosition[1].left)/20]!==undefined)
-            flag=1;
-
-            if(tempMat[(currentPosition[2].top+20)/20][(currentPosition[2].left)/20]!==undefined)
-            flag=1;
-
-            if(tempMat[(currentPosition[3].top+20)/20][(currentPosition[3].left)/20]!==undefined)
-            flag=1;
-
-            if(currentPosition[0].top==520)
-            flag1=1;
-
-            if(currentPosition[1].top==520)
-            flag1=1;
-
-            if(currentPosition[2].top==520)
-            flag1=1;
-
-            if(currentPosition[3].top==520)
-            flag1=1;
-
-            if(pos===520 || flag===1 || flag1===1)
+        set=setInterval(function(){
+            if(posit!==2)
             {
-                pos=0;
-                //console.log(currentPosition);
-                tempMat[(currentPosition[0].top)/20][(currentPosition[0].left)/20]=NUMBERING[x];
-                tempMat[(currentPosition[1].top)/20][(currentPosition[1].left)/20]=NUMBERING[x];
-                tempMat[(currentPosition[2].top)/20][(currentPosition[2].left)/20]=NUMBERING[x];
-                tempMat[(currentPosition[3].top)/20][(currentPosition[3].left)/20]=NUMBERING[x];
-                console.log(tempMat);
-                clearInterval(set);
-                var scores=that.state.score;
-                var linesClear=that.state.linesCleared;
-                var cnt=0;
-                for(var i=0;i<=26;i++)
+                if(posit===1)
                 {
-                    cnt=0;
-                    for(var j=0;j<tempMat[i].length;j++)
+                    posit=0;
+                    var tempMat=that.state.matrix;
+                    clearInterval(set);
+                    var scores=that.state.score;
+                    var newfigure=that.state.newFigure;
+                    newfigure=1;
+                    var linesClear=that.state.linesCleared;
+                    var cnt=0;
+                    for(var i=0;i<=26;i++)
                     {
-                        if(tempMat[i][j]!==undefined)
+                        cnt=0;
+                        for(var j=0;j<tempMat[i].length;j++)
                         {
-                            cnt++;
+                            if(tempMat[i][j]!==undefined)
+                            {
+                                cnt++;
+                            }
+                        }
+                        console.log(cnt);
+                        if(cnt==23)
+                        {
+                            tempMat.splice(i,1);
+                            tempMat.unshift([]);
+                            linesClear++;
+                            scores+=10;
                         }
                     }
-                    console.log(cnt);
-                    if(cnt==23)
-                    {
-                        tempMat.splice(i,1);
-                        tempMat.unshift([]);
-                        linesClear++;
-                        scores+=10;
-                    }
+                    pos=0;
+                    var random=Math.floor(Math.random()*20)*20;
+                    elem[0].style.top="20px";
+                    elem[0].style.left=random+"px";
+                    elem[0].style.transform='rotate('+0+'deg)';
+                    deg=0;
+                    that.setState({newFigure: 1,score:scores,linesCleared:linesClear});
+                    that.componentDidMount();
                 }
-                var random=Math.floor(Math.random()*20)*20;
-                elem[0].style.left=random+"px";
-                that.setState({matrix: tempMat,score:scores,linesCleared:linesClear});
-                that.componentDidMount();
-            }
+                else{
+                var tempMat=that.state.matrix;
+                var left=elem[0].style.left;
+                var top=elem[0].style.top;
+                var currentPosition=that.marker(x,deg,top,left);
+                console.log(currentPosition);
+                if(tempMat[(currentPosition[0].top+20)/20][(currentPosition[0].left)/20]!==undefined)
+                flag=1;
 
-            pos+=20;
-            elem[0].style.top=pos+"px";
-        },1000);
+                if(tempMat[(currentPosition[1].top+20)/20][(currentPosition[1].left)/20]!==undefined)
+                flag=1;
+
+                if(tempMat[(currentPosition[2].top+20)/20][(currentPosition[2].left)/20]!==undefined)
+                flag=1;
+
+                if(tempMat[(currentPosition[3].top+20)/20][(currentPosition[3].left)/20]!==undefined)
+                flag=1;
+
+                if(currentPosition[0].top==520)
+                flag1=1;
+
+                if(currentPosition[1].top==520)
+                flag1=1;
+
+                if(currentPosition[2].top==520)
+                flag1=1;
+
+                if(currentPosition[3].top==520)
+                flag1=1;
+
+
+                if((pos===520 || flag===1 || flag1===1))
+                {
+                    pos=0;
+                    //console.log(currentPosition);
+                    elem[0].style.top="20px";
+                    tempMat[(currentPosition[0].top)/20][(currentPosition[0].left)/20]=NUMBERING[x];
+                    tempMat[(currentPosition[1].top)/20][(currentPosition[1].left)/20]=NUMBERING[x];
+                    tempMat[(currentPosition[2].top)/20][(currentPosition[2].left)/20]=NUMBERING[x];
+                    tempMat[(currentPosition[3].top)/20][(currentPosition[3].left)/20]=NUMBERING[x];
+                    console.log(tempMat);
+                    clearInterval(set);
+                    var scores=that.state.score;
+                    var newfigure=that.state.newFigure;
+                    newfigure=1;
+                    var linesClear=that.state.linesCleared;
+                    var cnt=0;
+                    for(var i=0;i<=26;i++)
+                    {
+                        cnt=0;
+                        for(var j=0;j<tempMat[i].length;j++)
+                        {
+                            if(tempMat[i][j]!==undefined)
+                            {
+                                cnt++;
+                            }
+                        }
+                        console.log(cnt);
+                        if(cnt==23)
+                        {
+                            tempMat.splice(i,1);
+                            tempMat.unshift([]);
+                            linesClear++;
+                            scores+=10;
+                        }
+                    }
+                    var random=Math.floor(Math.random()*20)*20;
+                    elem[0].style.left=random+"px";
+                    elem[0].style.transform='rotate('+0+'deg)';
+                    deg=0;
+                    that.setState({matrix: tempMat,score:scores,linesCleared:linesClear,newFigure:newfigure});
+                    that.componentDidMount();
+                }
+            }
+                if(pause===0)
+                pos+=20;
+                else if(pause===1)
+                pos+=0;
+
+                elem[0].style.top=pos+"px";
+        }
+        },400);
     }
+
+    pauseGame=()=>{
+        if(pause===0)
+        {
+            pause=1;
+        }
+        else if(pause===1)
+        {
+            pause=0;
+        }
+        var newfigure=this.state.newFigure;
+        newfigure=0;
+        this.setState({newFigure:newfigure});
+    }
+
     parseStr=(string)=>{
         var newString="";
         for(var i=0;i<string.length;i++)
@@ -451,7 +520,6 @@ class play extends Component{
         var a,b,c,d;
         bottop=this.parseStr(bottop);
         botleft=this.parseStr(botleft);
-        console.log(bottop,botleft);
         if(shape===0)
         {
             a={
@@ -493,7 +561,7 @@ class play extends Component{
                     left: botleft+60
                 }
             }
-            if(degree===-90 || degree===90 || degree===270 || degree===-270)
+            if(degree===270)
             {
                 a={
                     top: bottop,
@@ -512,22 +580,41 @@ class play extends Component{
                     left: botleft
                 }
             }
-            if(degree===-180 || degree===180)
+            if(degree===90)
             {
                 a={
                     top: bottop,
+                    left: botleft+60
+                }
+                b={
+                    top: bottop+20,
+                    left: botleft+60
+                }
+                c={
+                    top: bottop+40,
+                    left: botleft+60
+                }
+                d={
+                    top: bottop+60,
+                    left: botleft+60
+                }
+            }
+            if(degree===-180 || degree===180)
+            {
+                a={
+                    top: bottop+60,
                     left: botleft
                 }
                 b={
-                    top: bottop,
+                    top: bottop+60,
                     left: botleft+20
                 }
                 c={
-                    top: bottop,
+                    top: bottop+60,
                     left: botleft+40
                 }
                 d={
-                    top: bottop,
+                    top: bottop+60,
                     left: botleft+60
                 }
             }
@@ -556,26 +643,26 @@ class play extends Component{
             if(degree===90 || degree===-270)
             {
                 a={
-                    top: bottop+20,
-                    left: botleft
+                    top: bottop,
+                    left: botleft+60
                 }
                 b={
-                    top: bottop,
-                    left: botleft+20
+                    top: bottop+20,
+                    left: botleft+60
                 }
                 c={
-                    top: bottop+20,
-                    left: botleft+20
+                    top: bottop+40,
+                    left: botleft+60
                 }
                 d={
-                    top: bottop+40,
-                    left: botleft+20
+                    top: bottop+20,
+                    left: botleft+40
                 }
             }
             if(degree===-90 || degree===270)
             {
                 a={
-                    top: bottop,
+                    top: bottop+60,
                     left: botleft
                 }
                 b={
@@ -587,26 +674,26 @@ class play extends Component{
                     left: botleft
                 }
                 d={
-                    top: bottop+20,
+                    top: bottop+40,
                     left: botleft+20
                 }
             }
             if(degree===180 || degree===-180)
             {
                 a={
-                    top: bottop,
-                    left: botleft+20
+                    top: bottop+40,
+                    left: botleft+40
                 }
                 b={
-                    top: bottop+20,
+                    top: bottop+60,
                     left: botleft+20
                 }
                 c={
-                    top: bottop+20,
-                    left: botleft
+                    top: bottop+60,
+                    left: botleft+60
                 }
                 d={
-                    top: bottop+20,
+                    top: bottop+60,
                     left: botleft+40
                 }
             }
@@ -637,7 +724,7 @@ class play extends Component{
             {
                 a={
                     top: bottop,
-                    left: botleft
+                    left: botleft+60
                 }
                 b={
                     top: bottop,
@@ -649,45 +736,45 @@ class play extends Component{
                 }
                 d={
                     top: bottop+20,
-                    left: botleft
+                    left: botleft+20
                 }
             }
             if(degree===-90 || degree===270)
             {
                 a={
-                    top: bottop+20,
+                    top: bottop+60,
                     left: botleft
                 }
                 b={
-                    top: bottop+20,
+                    top: bottop+60,
                     left: botleft+20
                 }
                 c={
-                    top: bottop+20,
+                    top: bottop+60,
                     left: botleft+40
                 }
                 d={
-                    top: bottop,
+                    top: bottop+40,
                     left: botleft+40
                 }
             }
             if(degree===180 || degree===-180)
             {
                 a={
-                    top: bottop,
-                    left: botleft
+                    top: bottop+20,
+                    left: botleft+40
                 }
                 b={
-                    top: bottop,
-                    left: botleft+20
+                    top: bottop+20,
+                    left: botleft+60
                 }
                 c={
-                    top: bottop+20,
-                    left: botleft+20
+                    top: bottop+40,
+                    left: botleft+60
                 }
                 d={
-                    top: bottop+40,
-                    left: botleft+20
+                    top: bottop+60,
+                    left: botleft+60
                 }
             }
             
@@ -713,46 +800,63 @@ class play extends Component{
                     left: botleft
                 }
             }
-            if(degree===90 || degree===-90 || degree===270 || degree===-270)
+            if(degree===90 || degree===-270)
             {
                 a={
                     top: bottop,
-                    left: botleft
+                    left: botleft+20
                 }
                 b={
                     top: bottop,
-                    left: botleft+20
+                    left: botleft+40
                 }
                 c={
                     top: bottop+20,
-                    left: botleft+20
+                    left: botleft+40
                 }
                 d={
                     top: bottop+20,
+                    left: botleft+60
+                }
+            }
+            if(degree===-90 || degree===270)
+            {
+                a={
+                    top: bottop+40,
+                    left: botleft
+                }
+                b={
+                    top: bottop+40,
+                    left: botleft+20
+                }
+                c={
+                    top: bottop+60,
+                    left: botleft+20
+                }
+                d={
+                    top: bottop+60,
                     left: botleft+40
                 }
             }
             if(degree===180 || degree===-180)
             {
                 a={
-                    top: bottop,
-                    left: botleft+20
+                    top: bottop+20,
+                    left: botleft+60
                 }
                 b={
-                    top: bottop+20,
-                    left: botleft
+                    top: bottop+40,
+                    left: botleft+40
                 }
                 c={
-                    top: bottop+20,
-                    left: botleft+20
+                    top: bottop+40,
+                    left: botleft+60
                 }
                 d={
-                    top: bottop+40,
-                    left: botleft
+                    top: bottop+60,
+                    left: botleft+40
                 }
             }
-           
-            
         }
         return [a,b,c,d];
     }
@@ -770,7 +874,36 @@ class play extends Component{
             y=<L/>
         if(x===4)
             y=<Z/>
-        return y;
+        if(start===1)
+        {
+            var node=ReactDOM.findDOMNode(this);
+            var elem=node.getElementsByClassName("anim");
+            var left=elem[0].style.left;
+            var top=elem[0].style.top;
+            var flag=0;
+            var tempPos=this.marker(x,deg,top,left);
+            var tempMat=this.state.matrix;
+            for(var i=0;i<=3;i++)
+            {
+                if(tempMat[tempPos[i].top/20][tempPos[i].left/20]!==undefined)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag===0)
+            {
+                return y;
+            }
+            else
+            {
+              posit=2;
+              clearInterval(set);
+                return y=-1;
+            }
+        }
+        else
+        return y;   
     }
 
 
@@ -794,16 +927,16 @@ class play extends Component{
             var newnumber=this.parseStr(left);
             var tempMat=this.state.matrix;
             
-            if(tempMat[(tempPos[0].top+20)/20][(tempPos[0].left-20)/20]!==undefined)
+            if(tempMat[(tempPos[0].top)/20][(tempPos[0].left-20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[1].top+20)/20][(tempPos[1].left-20)/20]!==undefined)
+            if(tempMat[(tempPos[1].top)/20][(tempPos[1].left-20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[2].top+20)/20][(tempPos[2].left-20)/20]!==undefined)
+            if(tempMat[(tempPos[2].top)/20][(tempPos[2].left-20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[3].top+20)/20][(tempPos[3].left-20)/20]!==undefined)
+            if(tempMat[(tempPos[3].top)/20][(tempPos[3].left-20)/20]!==undefined)
             flag1=1;
             
             if(flag1==0)
@@ -834,16 +967,16 @@ class play extends Component{
             var newnumber=this.parseStr(left);
             var tempMat=this.state.matrix;
             
-            if(tempMat[(tempPos[0].top+20)/20][(tempPos[0].left+20)/20]!==undefined)
+            if(tempMat[(tempPos[0].top)/20][(tempPos[0].left+20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[1].top+20)/20][(tempPos[1].left+20)/20]!==undefined)
+            if(tempMat[(tempPos[1].top)/20][(tempPos[1].left+20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[2].top+20)/20][(tempPos[2].left+20)/20]!==undefined)
+            if(tempMat[(tempPos[2].top)/20][(tempPos[2].left+20)/20]!==undefined)
             flag1=1;
 
-            if(tempMat[(tempPos[3].top+20)/20][(tempPos[3].left+20)/20]!==undefined)
+            if(tempMat[(tempPos[3].top)/20][(tempPos[3].left+20)/20]!==undefined)
             flag1=1;
             
             if(flag1==0)
@@ -853,27 +986,193 @@ class play extends Component{
             }
         }
     }
-
     rotateClock=()=>{
-        var node=ReactDOM.findDOMNode(this);
-        var elem=node.getElementsByClassName("anim");
-        var rotation=deg+90;
-        elem[0].style.transformOrigin="50% 50%";
-        elem[0].style.transform='rotate('+rotation+'deg)';
-        deg=(deg+90+360)%360;
+        if(x!==0)
+        {
+            var node=ReactDOM.findDOMNode(this);
+            var elem=node.getElementsByClassName("anim");
+            var rotation=deg+90;
+            elem[0].style.transform='rotate('+rotation+'deg)';
+            deg=(deg+90)%360;
+            var left=elem[0].style.left;
+            var top=elem[0].style.top;
+            top=this.parseStr(top);
+            left=this.parseStr(left);
+            console.log(left);
+            if(x===1)
+            {
+                if(deg===90)
+                {
+                    elem[0].style.left=left-60+"px";
+                    elem[0].style.top=top-60+"px";
+                    pos-=60;
+                }
+                if(deg===180)
+                {
+                    if(left===380)
+                        elem[0].style.left=left+"px";
+                    else
+                        elem[0].style.left=left+60+"px";
+                }
+                if(deg===0)
+                {
+                    if(left===440)
+                        elem[0].style.left=left-60+"px";
+                    elem[0].style.top=top+60+"px";
+                    pos+=60;
+                }
+            }
+            if(x===2)
+            {
+                if(deg===90)
+                {
+                    elem[0].style.left=left-40+"px";
+                    elem[0].style.top=top-20+"px";
+                    pos-=20;
+                }
+                if(deg===180)
+                {
+                    if(left===380)
+                        elem[0].style.left=left+"px";
+                    else
+                        elem[0].style.left=left+20+"px";
+                    elem[0].style.top=top-20+"px";
+                    pos-=20;
+                }
+                if(deg===270)
+                {
+                    elem[0].style.left=left+20+"px";
+                }
+                if(deg===0)
+                {
+                    if(left===420)
+                        elem[0].style.left=left-20+"px";
+                    elem[0].style.top=top+40+"px";
+                    pos+=40
+                }
+            }
+            if(x===3)
+            {
+                if(deg===90 || deg===-270)
+                {
+                    if(left===420)
+                        elem[0].style.left=left-40+"px";
+                    else
+                    elem[0].style.left=left-20+"px";
+                    elem[0].style.top=top+20+"px";
+                    pos+=20;
+                }
+                if(deg===180 || deg===-180)
+                {
+                    elem[0].style.left=left-20+"px";
+                    elem[0].style.top=top-40+"px";
+                    pos-=40;
+                }
+                if(deg===270)
+                {
+                    if(left===380)
+                        elem[0].style.left=left+20+"px";
+                    else
+                        elem[0].style.left=left+40+"px";
+                }
+                if(deg===0)
+                {
+                    elem[0].style.top=top+20+"px";
+                    pos+=20;
+                }
+            }
+            if(x===4)
+            {
+                if(deg===90 || deg===-270)
+                {   
+                    if(left===420)
+                        elem[0].style.left=left-40+"px";
+                    else
+                        elem[0].style.left=left-20+"px";
+                    elem[0].style.top=top+20+"px";
+                    pos+=20;
+                }
+                if(deg===-90 || deg===270)
+                {
+                    if(left===380)
+                        elem[0].style.left=left+20+"px";
+                    else
+                        elem[0].style.left=left+40+"px";
+                }
+                if(deg===180 || deg===-180)
+                {
+                    elem[0].style.left=left-20+"px";
+                    elem[0].style.top=top-40+"px";
+                    pos-=40;
+                }
+                if(deg===0 || deg===360)
+                {
+                    elem[0].style.top=top+20+"px";
+                    pos+=20;
+                }
+            }
 
+        }
     }
+
+    fastDown=()=>{
+        if(posit!==2)
+        {
+            var node=ReactDOM.findDOMNode(this);
+            var elem=node.getElementsByClassName("anim");
+            var left=elem[0].style.left;
+            var top=elem[0].style.top;
+            var tempPos=this.marker(x,deg,top,left);
+            var tempPos1=tempPos;
+            var tempMat=this.state.matrix;
+            var minDiff=9999999;
+            for(var i=0;i<=3;i++)
+            {
+                for(var j=(tempPos[i].top)/20;j<=27;j++)
+                {
+                    if((tempMat[j][(tempPos[i].left)/20]!==undefined) || j===27)
+                    {
+                        if(minDiff>=(j-1-tempPos[i].top/20))
+                            minDiff=(j-1-tempPos[i].top/20);
+                        break;
+                    }
+                }
+            }
+            console.log(minDiff);
+            for(var i=0;i<=3;i++)
+            tempPos1[i].top+=minDiff*20;
+            tempMat[(tempPos1[0].top)/20][(tempPos1[0].left)/20]=NUMBERING[x];
+            tempMat[(tempPos1[1].top)/20][(tempPos1[1].left)/20]=NUMBERING[x];
+            tempMat[(tempPos1[2].top)/20][(tempPos1[2].left)/20]=NUMBERING[x];
+            tempMat[(tempPos1[3].top)/20][(tempPos1[3].left)/20]=NUMBERING[x];
+            randomElement=null;
+            this.setState({matrix: tempMat,newFigure: 0});
+            posit=1;
+        }
+    }
+
     render(){
 
-        var randomElement=this.randomization();
+        console.log("hiii");
+        if(this.state.newFigure===1)
+        {
+            randomElement=this.randomization();
+            if(randomElement===-1)
+            {
+                randomElement=undefined;
+                gameover=<div style={{position:"fixed",top:"250px",left:"400px",zIndex:"6"}}><h1>Game Over</h1></div>
+            }
+        }
+        sidebar=<Sidebar linescleared={this.state.linesCleared} score={this.state.score}  pausegame={this.pauseGame} pause={pause}/>;
         return(
             <div className="play">
                 <div className="anim" style={{left:"0px",top:"20px"}}>
                     {randomElement}     
                 </div>
+                {gameover}
                 <Colour matrix={this.state.matrix} /> 
-                <Sidebar linescleared={this.state.linesCleared} score={this.state.score}/>
-                <Bottom moveleft={this.moveLeft} moveright={this.moveRight} rotateclock={this.rotateClock}/>
+                {sidebar}
+                <Bottom moveleft={this.moveLeft} moveright={this.moveRight} rotateclock={this.rotateClock} fastdown={this.fastDown}/>
             </div>
         )
     }

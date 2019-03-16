@@ -12,4 +12,6 @@
 .anim{
     position: absolute;
     z-index: 300;
+    width: 80px;
+    height: 80px;
 }

@@ -5,9 +5,8 @@ var bottom=(props)=>{
         <div className="bottom">
             <button name="left" className="btn"  onClick={props.moveleft}>Left</button>
             <button name="right" className="btn" onClick={props.moveright}>Right</button>
-            <button name="clockwise" className="btn" onClick={props.rotateclock}>+90deg</button>
-            <button name="anticlockwise" className="btn">-90deg</button>
-            <button name="anticlockwise" className="btn">Down</button>
+            <button name="clockwise" className="btn" onClick={props.rotateclock}>Rotate</button>
+            <button name="down" className="btn" onClick={props.fastdown}>Down</button>
         </div>
 
     )

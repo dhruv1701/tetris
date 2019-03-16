@@ -4,6 +4,15 @@ import './sidebar.css';
 var sidebar=(props)=>{
     var score=props.score;
     var linesCleared=props.linescleared;
+    if(props.pause===1)
+    {
+        var name="Resume";
+    }
+    else if(props.pause===0)
+    {
+        var name="Pause";
+    }
+
     return(
         <div className="sidebar">
             <h1>Tetris</h1>
@@ -16,7 +25,7 @@ var sidebar=(props)=>{
                 <h2>{linesCleared}</h2>
             </div>
             <div className="div3">
-                <button name="pause" onClick="">Pause</button>  
+                <button name="pause" onClick={props.pausegame} >{name}</button>  
             </div>
         </div>
     );
